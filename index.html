@@ -3,54 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robô Seguidor de Linha</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Catador de Lixo - Labirinto Interativo</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Robô Seguidor de Linha</h1>
-
-        <div class="arena">
-            <div class="track">
-                <!-- Elementos da pista -->
-                <div class="road-markings">
-                    <!-- Pista de fundo -->
-                    <div class="track-background"></div>
-
-                    <!-- Linha curva a ser seguida -->
-                    <div class="line-path">
-                        <svg width="100%" height="100%" viewBox="0 0 800 400" preserveAspectRatio="none">
-                            <path class="follow-line" d="M 100,50 C 200,50 300,150 400,200 S 600,350 700,350" stroke="white" stroke-width="8" fill="none" />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Robô -->
-                <div class="robot">
-                    <!-- Corpo do robô -->
-                    <div class="robot-body">
-                        <!-- Esteiras -->
-                        <div class="track left-track"></div>
-                        <div class="track right-track"></div>
-
-                        <!-- Sensores -->
-                        <div class="sensors">
-                            <div class="sensor sensor-left-outer"></div>
-                            <div class="sensor sensor-left-inner"></div>
-                            <div class="sensor sensor-right-inner"></div>
-                            <div class="sensor sensor-right-outer"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <header>
+            <h1>Catador de Lixo</h1>
+            <p>Um robô inteligente encontrando o melhor caminho até o lixo</p>
+        </header>
 
         <div class="controls">
-            <button id="start-btn" class="btn">Iniciar</button>
-            <button id="reset-btn" class="btn">Reiniciar</button>
+            <button id="find-path">Executar Caminho do Robô</button>
         </div>
+
+        <div class="maze-container">
+            <div id="maze"></div>
+        </div>
+
+        <footer>
+            <p>Projeto de Labirinto Interativo</p>
+        </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="js/maze.js"></script>
+    <script src="js/pathfinding.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
