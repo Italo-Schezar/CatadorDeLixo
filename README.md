@@ -4,9 +4,7 @@
 ![Versão](https://img.shields.io/badge/Versão-1.0-green)
 ![Licença](https://img.shields.io/badge/Licença-MIT-yellow)
 
-<p align="center">
-  <img src="https://via.placeholder.com/800x400/333/fff?text=Catador+de+Lixo" alt="Simulador do Robô Catador de Lixo" width="600"/>
-</p>
+![image](https://github.com/user-attachments/assets/2f9110cf-9230-4723-a3e3-f739863ee94d)
 
 ## 📋 Índice
 
@@ -47,10 +45,6 @@ graph TD
 ```
 
 ### Componentes do Sistema
-
-<p align="center">
-  <img src="https://via.placeholder.com/800x400/fff/333?text=Componentes+do+Labirinto" alt="Componentes do Labirinto" width="600"/>
-</p>
 
 1. **Robô**: Representado pelo emoji 🤖 (carrega o emoji 🚮 quando está com lixo)
 2. **Lixo**: Itens para coleta representados pelo emoji 🚮 (sempre 3 itens)
