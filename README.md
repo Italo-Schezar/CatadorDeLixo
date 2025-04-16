@@ -4,9 +4,8 @@
 ![Versão](https://img.shields.io/badge/Versão-1.0-green)
 ![Licença](https://img.shields.io/badge/Licença-MIT-yellow)
 
-<p align="center">
-  <img src="https://via.placeholder.com/800x400/333/fff?text=Robô+Seguidor+de+Linha" alt="Simulador do Robô Seguidor de Linha" width="600"/>
-</p>
+![image](https://github.com/user-attachments/assets/2abc3b63-8e67-4965-a5d4-a9f6b80ab875)
+
 
 ## 📋 Índice
 
