@@ -26,6 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
         findPathButton.disabled = true;
 
         try {
+            // Limpar completamente o labirinto antes de gerar um novo
+            maze.clearRobotAndTrash();
+
+            // Limpar o grid completamente
+            maze.initialize();
+
             // Generate a new maze
             maze.generate();
             renderer.render();
@@ -37,9 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Verify that we have at least one garbage and one trash bin
-            if (maze.garbagePositions.length === 0 || maze.trashPositions.length === 0) {
-                console.error('Failed to place garbage or trash bins');
+            // Verify that we have exactly 3 garbage items and exactly one trash bin
+            if (maze.garbagePositions.length !== 3 || maze.trashPositions.length !== 1) {
+                console.error(`Failed to place garbage or trash bin correctly. Garbage: ${maze.garbagePositions.length}, Trash: ${maze.trashPositions.length}`);
                 setTimeout(generateNewMaze, 100); // Try again
                 return;
             }
@@ -86,6 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Disable button during animation
         isAnimating = true;
         findPathButton.disabled = true;
+
+        // Verificar se já existe um robô, uma lixeira e exatamente 3 itens de lixo
+        if (!maze.robotPosition || maze.trashPositions.length !== 1 || maze.garbagePositions.length !== 3) {
+            // Se não existir ou não estiver na quantidade correta, limpar tudo e criar novos
+            maze.clearRobotAndTrash();
+            maze.clearAllGarbage();
+            maze.placeRobotAndTrash();
+            renderer.render();
+        }
 
         try {
             // Continuar enquanto houver lixo para coletar

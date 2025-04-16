@@ -15,6 +15,9 @@ class Maze {
     }
 
     initialize() {
+        // Limpar o grid existente
+        this.grid = [];
+
         // Create a grid filled with walls
         for (let y = 0; y < this.height; y++) {
             const row = [];
@@ -31,9 +34,19 @@ class Maze {
             }
             this.grid.push(row);
         }
+
+        // Garantir que não há robô, lixeira ou itens de lixo
+        this.robotPosition = null;
+        this.trashPositions = [];
+        this.garbagePositions = [];
+        this.hasGarbage = false;
     }
 
     generate() {
+        // Limpar qualquer robô, lixeira e itens de lixo existentes antes de reinicializar
+        this.clearRobotAndTrash();
+        this.clearAllGarbage();
+
         // Reset the grid to all walls
         this.initialize();
 
@@ -47,7 +60,7 @@ class Maze {
         // Ensure the maze has enough open cells
         this.ensureConnectivity();
 
-        // Place robot and trash
+        // Place robot, trash bin and exactly 3 garbage items
         this.placeRobotAndTrash();
 
         return this.grid;
@@ -135,10 +148,11 @@ class Maze {
     }
 
     placeRobotAndTrash() {
-        // Limpar posições anteriores
-        this.trashPositions = [];
-        this.garbagePositions = [];
-        this.hasGarbage = false;
+        // Primeiro, remover qualquer robô e lixeira existente
+        this.clearRobotAndTrash();
+
+        // Remover todos os itens de lixo existentes
+        this.clearAllGarbage();
 
         // Get all non-wall cells
         const openCells = [];
@@ -160,22 +174,28 @@ class Maze {
             this.robotPosition = { x: robotCell.x, y: robotCell.y };
         }
 
-        // Número de lixeiras e itens de lixo (ajuste conforme necessário)
-        const numTrash = 2; // Lixeiras (destino)
-        const numGarbage = 3; // Itens de lixo (para coletar)
+        // Número de lixeiras e itens de lixo
+        const numTrash = 1; // Sempre apenas uma lixeira (destino)
+        const numGarbage = 3; // Sempre exatamente 3 itens de lixo (para coletar)
 
-        // Place trash bins (destino)
-        for (let i = 0; i < numTrash && i < openCells.length; i++) {
+        // Place trash bin (destino) - apenas uma
+        if (openCells.length > 0) {
             const trashCell = openCells.shift();
             this.grid[trashCell.y][trashCell.x].isTrash = true;
             this.trashPositions.push({ x: trashCell.x, y: trashCell.y });
         }
 
-        // Place garbage items (para coletar)
-        for (let i = 0; i < numGarbage && i < openCells.length; i++) {
+        // Place garbage items (para coletar) - sempre exatamente 3
+        const garbageToPlace = Math.min(numGarbage, openCells.length);
+        for (let i = 0; i < garbageToPlace; i++) {
             const garbageCell = openCells.shift();
             this.grid[garbageCell.y][garbageCell.x].isGarbage = true;
             this.garbagePositions.push({ x: garbageCell.x, y: garbageCell.y });
+        }
+
+        // Verificar se conseguimos colocar exatamente 3 itens de lixo
+        if (this.garbagePositions.length !== numGarbage) {
+            console.warn(`Atenção: Foram colocados ${this.garbagePositions.length} itens de lixo em vez de ${numGarbage}`);
         }
     }
 
@@ -246,6 +266,45 @@ class Maze {
     // Deposita o lixo na lixeira
     depositGarbage() {
         // Indica que o robô não está mais carregando lixo
+        this.hasGarbage = false;
+    }
+
+    // Remove qualquer robô e lixeira existente no labirinto
+    clearRobotAndTrash() {
+        // Remover robô existente
+        if (this.robotPosition) {
+            this.grid[this.robotPosition.y][this.robotPosition.x].isRobot = false;
+            this.robotPosition = null;
+        }
+
+        // Remover todas as lixeiras existentes (verificando todo o grid)
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                if (this.grid[y][x].isTrash) {
+                    this.grid[y][x].isTrash = false;
+                }
+            }
+        }
+
+        // Limpar o array de posições de lixeiras
+        this.trashPositions = [];
+    }
+
+    // Remove todos os itens de lixo do labirinto
+    clearAllGarbage() {
+        // Remover todos os itens de lixo (verificando todo o grid)
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                if (this.grid[y][x].isGarbage) {
+                    this.grid[y][x].isGarbage = false;
+                }
+            }
+        }
+
+        // Limpar o array de posições de lixo
+        this.garbagePositions = [];
+
+        // Resetar o estado de carregamento de lixo
         this.hasGarbage = false;
     }
 
