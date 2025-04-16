@@ -1,11 +1,11 @@
-# 🤖 Robô Seguidor de Linha - Simulador
+# 🤖 Catador de Lixo - Labirinto Interativo
 
-![Robô Seguidor de Linha](https://img.shields.io/badge/Robô-Seguidor_de_Linha-blue)
+![Catador de Lixo](https://img.shields.io/badge/Robô-Catador_de_Lixo-blue)
 ![Versão](https://img.shields.io/badge/Versão-1.0-green)
 ![Licença](https://img.shields.io/badge/Licença-MIT-yellow)
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x400/333/fff?text=Robô+Seguidor+de+Linha" alt="Simulador do Robô Seguidor de Linha" width="600"/>
+  <img src="https://via.placeholder.com/800x400/333/fff?text=Catador+de+Lixo" alt="Simulador do Robô Catador de Lixo" width="600"/>
 </p>
 
 ## 📋 Índice
@@ -21,114 +21,124 @@
 
 ## 🔍 Sobre o Projeto
 
-Este simulador representa um robô seguidor de linha, demonstrando como os algoritmos de detecção e navegação funcionam em um ambiente controlado. O robô utiliza sensores para detectar a linha branca e ajustar sua trajetória para seguir o caminho definido.
+Este simulador representa um robô catador de lixo que navega por um labirinto gerado aleatoriamente. O robô utiliza um algoritmo de pathfinding (A*) para encontrar o caminho mais eficiente até os itens de lixo e depois até a lixeira para depositá-los. O projeto demonstra conceitos de geração de labirintos, algoritmos de busca de caminhos e animações em JavaScript.
 
 ## 🗺️ Topograma e Funcionamento
 
-O sistema do robô seguidor de linha funciona seguindo o fluxograma abaixo:
+O sistema do robô catador de lixo funciona seguindo o fluxograma abaixo:
 
 ```mermaid
 graph TD
-    A[Inicialização do Sistema] --> B[Cálculo dos Pontos do Caminho]
-    B --> C[Posicionamento Inicial do Robô]
-    C --> D{Botão Iniciar Pressionado?}
+    A[Inicialização do Sistema] --> B[Geração do Labirinto]
+    B --> C[Posicionamento do Robô, Lixeira e Lixo]
+    C --> D{Botão Executar Pressionado?}
     D -->|Não| D
-    D -->|Sim| E[Iniciar Movimento]
-    E --> F[Leitura dos Sensores]
-    F --> G[Cálculo da Posição Atual]
-    G --> H[Determinação da Direção]
-    H --> I[Atualização da Posição Visual]
-    I --> J{Fim do Caminho?}
-    J -->|Não| F
-    J -->|Sim| K[Reiniciar Caminho]
-    K --> F
-    
-    L[Botão Reiniciar Pressionado] --> M[Parar Movimento]
+    D -->|Sim| E[Iniciar Ciclo de Coleta]
+    E --> F[Encontrar Lixo Mais Próximo]
+    F --> G[Calcular Caminho até o Lixo]
+    G --> H[Mover até o Lixo e Coletar]
+    H --> I[Encontrar Lixeira Mais Próxima]
+    I --> J[Calcular Caminho até a Lixeira]
+    J --> K[Mover até a Lixeira e Depositar]
+    K --> L{Ainda Existe Lixo?}
+    L -->|Sim| F
+    L -->|Não| M[Gerar Novo Labirinto]
     M --> C
 ```
 
 ### Componentes do Sistema
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x400/fff/333?text=Componentes+do+Robô" alt="Componentes do Robô" width="600"/>
+  <img src="https://via.placeholder.com/800x400/fff/333?text=Componentes+do+Labirinto" alt="Componentes do Labirinto" width="600"/>
 </p>
 
-1. **Robô**: Representado visualmente com corpo, esteiras e sensores
-2. **Sensores**: Quatro sensores que detectam a proximidade com a linha
-3. **Pista**: Caminho definido por uma linha branca em fundo escuro
-4. **Controles**: Botões para iniciar e reiniciar a simulação
+1. **Robô**: Representado pelo emoji 🤖 (carrega o emoji 🚮 quando está com lixo)
+2. **Lixo**: Itens para coleta representados pelo emoji 🚮 (sempre 3 itens)
+3. **Lixeira**: Destino para depósito do lixo representado pelo emoji 🗑️ (sempre 1 lixeira)
+4. **Labirinto**: Gerado aleatoriamente com paredes e caminhos
+5. **Controles**: Botão para executar o ciclo de coleta do robô
 
-## 🧮 Algoritmo de Caminho
+## 🧮 Algoritmos Implementados
 
-O algoritmo implementado para seguir o caminho funciona da seguinte forma:
+O projeto implementa dois algoritmos principais:
 
-### 1. Pré-processamento do Caminho
-
-```
-1. Obter o caminho SVG definido no HTML
-2. Calcular o comprimento total do caminho
-3. Dividir o caminho em N pontos equidistantes
-4. Armazenar as coordenadas (x,y) de cada ponto
-```
-
-### 2. Navegação do Robô
+### 1. Geração do Labirinto (DFS)
 
 ```
-1. Iniciar no primeiro ponto do caminho
-2. Para cada frame de animação:
-   a. Avançar para o próximo ponto no caminho
-   b. Calcular a posição interpolada entre pontos para movimento suave
-   c. Calcular a rotação com base na direção do caminho
-   d. Verificar os sensores em relação à linha
-   e. Atualizar a posição visual do robô
-3. Se chegar ao final do caminho, reiniciar do início
+1. Iniciar com um grid preenchido com paredes
+2. Escolher uma célula inicial e marcá-la como passagem
+3. Usar o algoritmo de Busca em Profundidade (DFS):
+   a. Para cada direção possível (cima, direita, baixo, esquerda):
+      i. Verificar se a célula a duas unidades de distância está dentro dos limites e é uma parede
+      ii. Se sim, transformar tanto essa célula quanto a célula entre elas em passagens
+      iii. Continuar o DFS a partir da nova célula
+4. Garantir conectividade mínima adicionando passagens extras se necessário
+5. Posicionar o robô, a lixeira e os 3 itens de lixo em células vazias aleatórias
 ```
 
-### 3. Detecção de Linha
-
-O robô utiliza quatro sensores para detectar a linha:
-
-<p align="center">
-  <img src="https://via.placeholder.com/600x300/fff/333?text=Sensores+do+Robô" alt="Sensores do Robô" width="500"/>
-</p>
+### 2. Algoritmo de Pathfinding (A*)
 
 ```
-Para cada sensor:
-1. Calcular a posição do sensor com base na posição e rotação do robô
-2. Calcular a distância do sensor à linha
-3. Se a distância for menor que um limiar (30px):
-   - Ativar o sensor (mudar cor para verde)
-   - Ajustar a direção do robô
-4. Caso contrário:
-   - Desativar o sensor (manter cor vermelha)
+1. Inicializar conjuntos aberto e fechado
+2. Adicionar posição inicial ao conjunto aberto
+3. Enquanto o conjunto aberto não estiver vazio:
+   a. Selecionar o nó com menor custo estimado (f = g + h)
+   b. Se for o destino, reconstruir e retornar o caminho
+   c. Remover o nó do conjunto aberto e adicionar ao fechado
+   d. Para cada vizinho acessível:
+      i. Calcular o custo g (distância do início)
+      ii. Calcular a heurística h (distância Manhattan até o destino)
+      iii. Atualizar o caminho se for melhor que o anterior
+4. Se o conjunto aberto esvaziar sem encontrar o destino, não há caminho possível
+```
+
+### 3. Ciclo de Coleta de Lixo
+
+```
+1. Enquanto houver lixo para coletar:
+   a. Encontrar o lixo mais próximo do robô
+   b. Calcular e seguir o caminho até o lixo
+   c. Coletar o lixo (remover do labirinto e marcar o robô como carregando)
+   d. Encontrar a lixeira mais próxima
+   e. Calcular e seguir o caminho até a lixeira
+   f. Depositar o lixo na lixeira
+2. Quando todo o lixo for coletado, gerar um novo labirinto
 ```
 
 ## 💻 Tecnologias Utilizadas
 
 - **HTML5**: Estrutura da página e elementos visuais
-- **CSS3**: Estilização e animações
-- **JavaScript**: Lógica de funcionamento e algoritmos
-- **SVG**: Definição do caminho a ser seguido
+- **CSS3**: Estilização e layout responsivo
+- **JavaScript**: Lógica de funcionamento, algoritmos de pathfinding e geração de labirintos
+- **CSS Grid**: Renderização do labirinto
+- **Emojis**: Representação visual dos elementos do jogo
 
 ## 🚀 Como Executar
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/robo-seguidor-linha.git
+   git clone https://github.com/Italo-Schezar/CtadorDeLixo.git
    ```
 
 2. Abra o arquivo `index.html` em seu navegador
 
-3. Use os botões "Iniciar" e "Reiniciar" para controlar a simulação
+3. Clique no botão "Executar Caminho do Robô" para iniciar a simulação
+
+4. Um novo labirinto será gerado automaticamente após a conclusão do ciclo
 
 ## 📁 Estrutura do Projeto
 
 ```
-robo-seguidor-linha/
-├── index.html      # Estrutura da página e elementos visuais
-├── style.css       # Estilização dos componentes
-├── script.js       # Lógica de funcionamento e algoritmos
-└── README.md       # Documentação do projeto
+CtadorDeLixo/
+├── index.html           # Estrutura da página e elementos visuais
+├── css/
+│   └── style.css       # Estilização dos componentes
+├── js/
+│   ├── maze.js         # Geração e gerenciamento do labirinto
+│   ├── pathfinding.js  # Algoritmo A* para encontrar caminhos
+│   ├── renderer.js     # Renderização visual do labirinto
+│   └── main.js         # Inicialização e controle da aplicação
+└── README.md           # Documentação do projeto
 ```
 
 ## 🤝 Contribuições
@@ -148,5 +158,5 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para d
 ---
 
 <p align="center">
-  Desenvolvido poe por Italo Schezar, Felipe Avelar e Pedro Anibal
+  Desenvolvido por Italo Schezar, Felipe Avelar e Pedro Anibal
 </p>
